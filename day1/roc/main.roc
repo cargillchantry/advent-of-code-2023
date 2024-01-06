@@ -4,13 +4,14 @@ app "task-usage"
     }
     imports [ 
         pf.Stdout,
+        pf.Task,
         "../input" as inputStr : Str
     ]
     provides [ main ] to pf
 
-main = inputStr
-    |> processInput
-    |> Stdout.line
+main = 
+    _ <- "Part 1: \(inputStr |> processInput)" |> Stdout.line |> Task.await
+    "Part 2: Not complete" |> Stdout.line
 
 expect 
     out = processInput "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"

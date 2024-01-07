@@ -26,11 +26,14 @@ toNumbers = \graphemes ->
 
 matchingArrayAtPosition = \graphemes, index ->
     \num -> 
-        List.walkWithIndexUntil num Bool.false \_, x, offset ->
-            matches = List.get graphemes (index + offset) |> Result.map (\y -> x == y) |> Result.withDefault Bool.false
-            if matches then Continue Bool.true else Break Bool.false
+        allWithIndex num \x, offset -> 
+            List.get graphemes (index + offset) |> Result.map (\y -> x == y) |> Result.withDefault Bool.false
 
-combineFirstAndLast = \digits ->
+allWithIndex = \list, predicate -> 
+    List.walkWithIndexUntil list Bool.false \_, x, index ->
+        if predicate x index then Continue Bool.true else Break Bool.false 
+
+combineFirstAndLast = \digits -> 
     when digits is
         [Ok first, .., Ok last] -> Num.toStr first |> Str.concat (Num.toStr last) |> Str.toU32
         [Ok first] -> Num.toStr first |> Str.concat (Num.toStr first) |> Str.toU32
